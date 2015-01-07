@@ -2,7 +2,8 @@ import astropy.io.fits as fits
 from astropy.table import Table,Column
 from astropy.coordinates import SkyCoord
 import astropy.units as u
-
+import pyregion
+import numpy as np
 
 
 t=Table.read('s2_450.fits',format='fits')
@@ -10,6 +11,8 @@ t.add_column(Column(data=(['SCIENCE']*len(t)),name='type'))
 t.add_column(Column(name='Name',data=(['                       ']*len(t))))
 t.add_column(Column(name='RAString',data=(['                       ']*len(t))))
 t.add_column(Column(name='DECString',data=(['                       ']*len(t))))
+t.add_column(Column(data=(['circle point']*len(t)),name='shape'))
+t.add_column(Column(data=np.sqrt((t['FLUX_450']/0.1)/600.),name='radius'))
 
 for idx,source in enumerate(t):
     c = SkyCoord(ra=source['RA']*u.degree,
@@ -27,3 +30,9 @@ for idx,source in enumerate(t):
 t['Type'] = 'SCIENCE'
 t2 = t['Type','Name','RAString','DECString']
 t2.write('h2cocat.txt',format='ascii')
+
+t3 = t['shape','RAString','DECString']
+t3.write('h2co.reg',format='ascii')
+
+
+
