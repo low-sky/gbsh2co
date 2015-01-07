@@ -139,7 +139,7 @@ for ndffile in filelist:
             t['FILENAME'] = file
 
         realz = data[data>0]
-        upperlim = np.percentile(realz,95)
+        upperlim = np.percentile(realz,80)
 
 
         plt.imshow(data,vmin=0,vmax=upperlim,cmap='copper_r')
